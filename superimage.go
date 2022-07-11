@@ -5,7 +5,7 @@ import (
 	"image/color"
 )
 
-const VERSION = "1.1.0"
+const VERSION = "1.2.0"
 
 // SuperImage is an image.Image implementation that wraps another image.Image.
 type SuperImage struct {

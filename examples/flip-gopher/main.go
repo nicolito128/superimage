@@ -22,7 +22,7 @@ func main() {
 		panic(err)
 	}
 
-	// Flip the image vertically
+	// Flip the image horizontally
 	flip := superimage.Flip(img)
 	// Encoding on the buffer
 	buf = new(bytes.Buffer)

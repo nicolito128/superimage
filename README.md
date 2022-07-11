@@ -10,8 +10,8 @@ Go module that provides some useful functions for working with images.
   - [Examples](#examples)
   - [References](#references)
     - [About `SuperImage`](#about-superimage)
-      - [Using `GetByURL`](#using-getbyurl)
-      - [Using `GetByFile`](#using-getbyfile)
+    - [Using `GetByURL`](#using-getbyurl)
+    - [Using `GetByFile`](#using-getbyfile)
     - [Using `Decode`](#using-decode)
     - [Using `Encode`](#using-encode)
     - [Using `ParseURL`](#using-parseurl)
@@ -87,7 +87,7 @@ func main() {
 }
 ```
 
-#### Using `GetByURL`
+### Using `GetByURL`
 ```go
 func main() {
     // Getting a new SuperImage with a link
@@ -100,7 +100,7 @@ func main() {
 }
 ```
 
-#### Using `GetByFile`
+### Using `GetByFile`
 ```go
 func main() {
     // Getting a new SuperImage with a file

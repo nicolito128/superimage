@@ -121,7 +121,7 @@ func Decode(r io.Reader, format string) (*SuperImage, error) {
 }
 
 // Encode writes the Image m to the given writer in the specified format (png, jpg, jpeg).
-// If op *EncodeOptions is nil, the default options used are: { Format: png, Quality: 100 }.
+// If op *EncodeOptions is nil, the default options used are: { Quality: 100 }.
 func Encode(w io.Writer, m *SuperImage, op *EncodeOptions) error {
 	if op == nil {
 		op = &EncodeOptions{

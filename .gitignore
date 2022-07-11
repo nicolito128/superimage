@@ -1,0 +1,12 @@
+.vscode
+.env
+/build
+/examples/*.png
+/examples/*.jpg
+/examples/*.jpeg
+/examples/gopher/*.png
+/examples/gopher/*.jpg
+/examples/gopher/*.jpeg
+/examples/negative-gopher/*.png
+/examples/negative-gopher/*.jpg
+/examples/negative-gopher/*.jpeg

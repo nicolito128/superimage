@@ -16,6 +16,7 @@ Go module that provides some useful functions for working with images.
     - [Using `ParseURL`](#using-parseurl)
     - [Using `Negative`](#using-negative)
     - [Using `Flip`](#using-flip)
+    - [Using `Reflect`](#using-reflect)
   - [Interest links](#interest-links)
 
 ## Getting Started
@@ -179,6 +180,28 @@ func main() {
     }
 
     ioutil.WriteFile("./flipped.png", buf.Bytes(), 0666)
+}
+```
+
+### Using `Reflect`
+```go
+func main() {
+    img, err := superimage.GetByURL("https://awesomeurl.com/image.png")
+    if err != nil {
+        panic(err)
+    }
+
+    // Reflecting image
+    reflect := superimage.Reflect(img)
+
+    // Saving
+    buf := new(bytes.Buffer)
+    err = superimage.Encode(buf, reflect, nil)
+    if err != nil {
+        panic(err)
+    }
+
+    ioutil.WriteFile("./reflect.png", buf.Bytes(), 0666)
 }
 ```
 

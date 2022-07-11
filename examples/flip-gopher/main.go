@@ -13,7 +13,7 @@ func main() {
 		panic(err)
 	}
 
-	// Buffer for store the image data
+	// Buffer store the image data
 	buf := new(bytes.Buffer)
 	// Encode writes the image into the buffer
 	// gopher is ".png", so options can be nil
@@ -23,14 +23,14 @@ func main() {
 	}
 
 	// Flip the image vertically
-	neg := superimage.Flip(img)
+	flip := superimage.Flip(img)
 	// Encoding on the buffer
 	buf = new(bytes.Buffer)
-	err = superimage.Encode(buf, neg, nil)
+	err = superimage.Encode(buf, flip, nil)
 	if err != nil {
 		panic(err)
 	}
 
-	// Writing the cute negative gopher
+	// Writing the cute flipped gopher
 	ioutil.WriteFile("examples/flip-gopher/gopher.png", buf.Bytes(), 0666)
 }

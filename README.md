@@ -88,6 +88,8 @@ func main() {
 ```
 
 ### Using `GetByURL`
+Get a new SuperImage with an URL.
+
 ```go
 func main() {
     // Getting a new SuperImage with a link
@@ -101,6 +103,8 @@ func main() {
 ```
 
 ### Using `GetByFile`
+Get a new SuperImage with a project file image.
+
 ```go
 func main() {
     // Getting a new SuperImage with a file
@@ -114,15 +118,22 @@ func main() {
 ```
 
 ### Using `Decode`
+Decodes an reader on a new SuperImage.
+
 ```go
 func main() {
     file, _ := os.Open("./examples/gopher/gopher.png")
-	i, _ := superimage.Decode(file, "png")
+	i, err := superimage.Decode(file, "png")
+    if err != nil {
+        panic(err)
+    }
+
 	println(i.Height, i.Width)
 }
 ```
 
 ### Using `Encode`
+Encodes a writer on a new SuperImage.
 
 ```go
 func main() {
@@ -154,6 +165,8 @@ func main() {
 ```
 
 ### Using `Negative`
+Inverts the colors of an image.
+
 ```go
 func main() {
     img, err := superimage.GetByURL("https://awesomeurl.com/image.png")
@@ -176,6 +189,8 @@ func main() {
 ```
 
 ### Using `Flip`
+Turn an image upside down.
+
 ```go
 func main() {
     img, err := superimage.GetByURL("https://awesomeurl.com/image.png")
@@ -198,6 +213,8 @@ func main() {
 ```
 
 ### Using `Reflect`
+Reflects an image vertically.
+
 ```go
 func main() {
     img, err := superimage.GetByURL("https://awesomeurl.com/image.png")

@@ -38,7 +38,7 @@ func Flip(img *SuperImage) *SuperImage {
 
 	flipped := img.Factory(&image.RGBA{}, nil).(*image.RGBA)
 	for x := bounds.Min.X; x < width; x++ {
-		for y := bounds.Min.Y; y < height/2; y++ {
+		for y := bounds.Min.Y; y <= height/2; y++ {
 			i := flipped.PixOffset(x, y)
 			j := flipped.PixOffset(x, height-y-1)
 

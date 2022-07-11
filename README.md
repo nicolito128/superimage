@@ -9,6 +9,7 @@ Go module that provides some useful functions for working with images.
     - [Quick start](#quick-start)
   - [Examples](#examples)
   - [References](#references)
+    - [About `SuperImage`](#about-superimage)
       - [Using `GetByURL`](#using-getbyurl)
       - [Using `GetByFile`](#using-getbyfile)
     - [Using `Decode`](#using-decode)
@@ -72,6 +73,19 @@ func main() {
 You have some good examples on how to use the package in the `examples/` folder.
 
 ## References
+
+### About `SuperImage`
+SuperImage is an Go struct, it can be used as any **Image** from the `std image package` because it's an Image interface implementation with the methods _At()_, _Bounds()_ and _ColorModel()_. You can create a new SuperImage with the _New(...)_ function.
+
+```go
+func main() {
+    rec := image.Rectangle{image.Point{0, 0}, image.Point{500, 500}}
+    boringImg := image.NewRGBA(rec)
+    superImg := superimage.New(boringImg, "png")
+
+    println(superImg.Bounds())
+}
+```
 
 #### Using `GetByURL`
 ```go

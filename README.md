@@ -15,6 +15,7 @@ Go module that provides some useful functions for working with images.
     - [Using `Encode`](#using-encode)
     - [Using `ParseURL`](#using-parseurl)
     - [Using `Negative`](#using-negative)
+    - [Using `Flip`](#using-flip)
   - [Interest links](#interest-links)
 
 ## Getting Started
@@ -156,6 +157,28 @@ func main() {
     }
 
     ioutil.WriteFile("./negative.png", buf.Bytes(), 0666)
+}
+```
+
+### Using `Flip`
+```go
+func main() {
+    img, err := superimage.GetByURL("https://awesomeurl.com/image.png")
+    if err != nil {
+        panic(err)
+    }
+
+    // Flipping image
+    flipped := superimage.Flip(img)
+
+    // Saving
+    buf := new(bytes.Buffer)
+    err = superimage.Encode(buf, flipped, nil)
+    if err != nil {
+        panic(err)
+    }
+
+    ioutil.WriteFile("./flipped.png", buf.Bytes(), 0666)
 }
 ```
 

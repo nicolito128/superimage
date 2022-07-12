@@ -5,17 +5,13 @@ import (
 	"image/color"
 )
 
-const VERSION = "1.3.1"
-
 // SuperImage is an image.Image implementation that wraps another image.Image.
 type SuperImage struct {
 	// self is the wrapped image.Image.
 	self image.Image
-
 	// Sizes of the image.
 	Width  int
 	Height int
-
 	// Image format: png, jpg, jpeg.
 	Format string
 }

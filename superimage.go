@@ -17,7 +17,7 @@ type SuperImage struct {
 }
 
 type FactoryOptions struct {
-	YCbCrSubsampleRatio *int
+	YCbCrSubsampleRatio *image.YCbCrSubsampleRatio
 	Palette             *color.Palette
 	Uniform             *color.Color
 }
@@ -59,7 +59,7 @@ func (s *SuperImage) ColorModel() color.Model {
 // { YCbCrSubsampleRatio: 4, Palette: new(color.Pallete), Uniform: new(color.Color) }
 func (s *SuperImage) Factory(model image.Image, op *FactoryOptions) image.Image {
 	// Default options values.
-	i := new(int)
+	i := new(image.YCbCrSubsampleRatio)
 	*i = 4
 	p := new(color.Palette)
 	u := new(color.Color)

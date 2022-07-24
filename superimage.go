@@ -17,7 +17,7 @@ type SuperImage struct {
 }
 
 type FactoryOptions struct {
-	YCbCrSubsampleRatio *image.YCbCrSubsampleRatio
+	YCbCrSubsampleRatio image.YCbCrSubsampleRatio
 	Palette             *color.Palette
 	Uniform             *color.Color
 }
@@ -59,24 +59,16 @@ func (s *SuperImage) ColorModel() color.Model {
 // { YCbCrSubsampleRatio: 4, Palette: new(color.Pallete), Uniform: new(color.Color) }
 func (s *SuperImage) Factory(model image.Image, op *FactoryOptions) image.Image {
 	// Default options values.
-	i := new(image.YCbCrSubsampleRatio)
-	*i = 4
 	p := new(color.Palette)
 	u := new(color.Color)
 
 	if op == nil {
 		// Assignation
 		op = &FactoryOptions{}
-		op.YCbCrSubsampleRatio = i
 		op.Palette = p
 		op.Uniform = u
 	} else {
 		// FactoryOptions is not nil but some fields are nil.
-
-		if op.YCbCrSubsampleRatio == nil {
-			op.YCbCrSubsampleRatio = i
-		}
-
 		if op.Palette == nil {
 			op.Palette = p
 		}
@@ -108,9 +100,9 @@ func (s *SuperImage) Factory(model image.Image, op *FactoryOptions) image.Image 
 	case *image.CMYK:
 		return image.NewCMYK(s.Bounds())
 	case *image.YCbCr:
-		return image.NewYCbCr(s.Bounds(), image.YCbCrSubsampleRatio(*op.YCbCrSubsampleRatio))
+		return image.NewYCbCr(s.Bounds(), image.YCbCrSubsampleRatio(op.YCbCrSubsampleRatio))
 	case *image.NYCbCrA:
-		return image.NewNYCbCrA(s.Bounds(), image.YCbCrSubsampleRatio(*op.YCbCrSubsampleRatio))
+		return image.NewNYCbCrA(s.Bounds(), image.YCbCrSubsampleRatio(op.YCbCrSubsampleRatio))
 	case *image.Paletted:
 		return image.NewPaletted(s.Bounds(), *op.Palette)
 	case *image.Uniform:

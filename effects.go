@@ -125,6 +125,9 @@ func Reflect(img *SuperImage) *SuperImage {
 	return New(reflected, img.Format)
 }
 
+// Blur blurs an image by a given radio.
+// If the radio is negative or bigger than the image's width or height, it returns an error.
+// Radio 0 returns the original image without any change.
 func Blur(img *SuperImage, radio int) (*SuperImage, error) {
 	bounds := img.Bounds()
 	width := img.Width
@@ -155,6 +158,7 @@ func Blur(img *SuperImage, radio int) (*SuperImage, error) {
 	return New(blurred, img.Format), nil
 }
 
+// blurPointByRadio algorithm to blur a point by a given radio.
 func blurPointByRadio(img *SuperImage, x, y, radio int) color.NRGBA {
 	if radio == 0 {
 		r, g, b, a := img.At(x, y).RGBA()

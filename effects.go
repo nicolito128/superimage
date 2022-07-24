@@ -1,9 +1,13 @@
 package superimage
 
 import (
+	"errors"
 	"image"
 	"image/color"
 )
+
+var ErrNegativeRadio = errors.New("Negative radio must be higher than 0.")
+var ErrRadioTooBig = errors.New("Radio too big. It must be lower than the image's width or height.")
 
 // Negative inverts the colors of an image returning a new image.Image interface.
 func Negative(img *SuperImage) *SuperImage {
@@ -119,4 +123,61 @@ func Reflect(img *SuperImage) *SuperImage {
 	}
 
 	return New(reflected, img.Format)
+}
+
+func Blur(img *SuperImage, radio int) (*SuperImage, error) {
+	bounds := img.Bounds()
+	width := img.Width
+	height := img.Height
+
+	if radio < 0 {
+		return nil, ErrNegativeRadio
+	}
+
+	if radio >= width || radio >= height {
+		return nil, ErrRadioTooBig
+	}
+
+	blurred := img.Factory(&image.NRGBA{}, nil).(*image.NRGBA)
+	for x := bounds.Min.X + radio; x < width-radio; x++ {
+		for y := bounds.Min.Y + radio; y < height-radio; y++ {
+			i := blurred.PixOffset(x, y)
+			p := blurred.Pix[i : i+4 : i+4]
+
+			color := blurPointByRadio(img, x, y, radio)
+			p[0] = color.R
+			p[1] = color.G
+			p[2] = color.B
+			p[3] = color.A
+		}
+	}
+
+	return New(blurred, img.Format), nil
+}
+
+func blurPointByRadio(img *SuperImage, x, y, radio int) color.NRGBA {
+	if radio == 0 {
+		r, g, b, a := img.At(x, y).RGBA()
+		return color.NRGBA{uint8(r >> 8), uint8(g >> 8), uint8(b >> 8), uint8(a >> 8)}
+	}
+
+	var red, blue, green, alpha uint32
+
+	for i := 1; i <= radio; i++ {
+		r1, g1, b1, a1 := img.At(x, y+i).RGBA()
+		r2, g2, b2, a2 := img.At(x, y-i).RGBA()
+		r3, g3, b3, a3 := img.At(x-i, y).RGBA()
+		r4, g4, b4, a4 := img.At(x+i, y).RGBA()
+		r5, g5, b5, a5 := img.At(x+1, y+1).RGBA()
+		r6, g6, b6, a6 := img.At(x-1, y-1).RGBA()
+		r7, g7, b7, a7 := img.At(x, y).RGBA()
+
+		red = (r1 + r2 + r3 + r4 + r5 + r6 + r7) / 7
+		green = (g1 + g2 + g3 + g4 + g5 + g6 + g7) / 7
+		blue = (b1 + b2 + b3 + b4 + b5 + b6 + b7) / 7
+		alpha = (a1 + a2 + a3 + a4 + a5 + a6 + a7) / 7
+
+	}
+
+	return color.NRGBA{uint8(red >> 8), uint8(green >> 8), uint8(blue >> 8), uint8(alpha >> 8)}
 }

@@ -1,5 +1,5 @@
 # SuperImage
-Go module that provides some useful functions for working with images.
+The package provides some useful structures and functions for working with images. Apply effects such as blur or negative color to an image with a well-performing tool.
 
 ## Index
 - [SuperImage](#superimage)

@@ -18,6 +18,7 @@ Go module that provides some useful functions for working with images.
     - [Using `Negative`](#using-negative)
     - [Using `Flip`](#using-flip)
     - [Using `Reflect`](#using-reflect)
+    - [Using `Blur`](#using-blur)
   - [Interest links](#interest-links)
 
 ## Getting Started
@@ -233,6 +234,32 @@ func main() {
     }
 
     ioutil.WriteFile("./reflect.png", buf.Bytes(), 0666)
+}
+```
+
+### Using `Blur`
+Blur an image by a given radio.
+```go
+func main() {
+    img, err := superimage.GetByURL("https://awesomeurl.com/image.png")
+    if err != nil {
+        panic(err)
+    }
+
+    // Blur
+    blurred, err := superimage.Blur(img)
+    if err != nil {
+        panic(err)
+    }
+
+    // Saving
+    buf := new(bytes.Buffer)
+    err = superimage.Encode(buf, blurred, nil)
+    if err != nil {
+        panic(err)
+    }
+
+    ioutil.WriteFile("./blurred.png", buf.Bytes(), 0666)
 }
 ```
 

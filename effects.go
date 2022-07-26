@@ -141,7 +141,7 @@ func Blur(img *SuperImage, radio int) (*SuperImage, error) {
 		return nil, ErrRadioTooBig
 	}
 
-	blurred := img.Factory(&image.NRGBA{}, nil).(*image.NRGBA)
+	blurred := img.Factory(&image.RGBA{}, nil).(*image.RGBA)
 	for x := bounds.Min.X + radio; x < width-radio; x++ {
 		for y := bounds.Min.Y + radio; y < height-radio; y++ {
 			i := blurred.PixOffset(x, y)
@@ -159,10 +159,10 @@ func Blur(img *SuperImage, radio int) (*SuperImage, error) {
 }
 
 // blurPointByRadio algorithm to blur a point by a given radio.
-func blurPointByRadio(img *SuperImage, x, y, radio int) color.NRGBA {
+func blurPointByRadio(img *SuperImage, x, y, radio int) color.RGBA {
 	if radio == 0 {
 		r, g, b, a := img.At(x, y).RGBA()
-		return color.NRGBA{uint8(r >> 8), uint8(g >> 8), uint8(b >> 8), uint8(a >> 8)}
+		return color.RGBA{uint8(r >> 8), uint8(g >> 8), uint8(b >> 8), uint8(a >> 8)}
 	}
 
 	var red, blue, green, alpha uint32
@@ -172,16 +172,16 @@ func blurPointByRadio(img *SuperImage, x, y, radio int) color.NRGBA {
 		r2, g2, b2, a2 := img.At(x, y-i).RGBA()
 		r3, g3, b3, a3 := img.At(x-i, y).RGBA()
 		r4, g4, b4, a4 := img.At(x+i, y).RGBA()
-		r5, g5, b5, a5 := img.At(x+1, y+1).RGBA()
-		r6, g6, b6, a6 := img.At(x-1, y-1).RGBA()
-		r7, g7, b7, a7 := img.At(x, y).RGBA()
+		r5, g5, b5, a5 := img.At(x+i, y+i).RGBA()
+		r6, g6, b6, a6 := img.At(x-i, y-i).RGBA()
+		r7, g7, b7, a7 := img.At(x+i, y-i).RGBA()
+		r8, g8, b8, a8 := img.At(x, y).RGBA()
 
-		red = (r1 + r2 + r3 + r4 + r5 + r6 + r7) / 7
-		green = (g1 + g2 + g3 + g4 + g5 + g6 + g7) / 7
-		blue = (b1 + b2 + b3 + b4 + b5 + b6 + b7) / 7
-		alpha = (a1 + a2 + a3 + a4 + a5 + a6 + a7) / 7
-
+		red = (r1 + r2 + r3 + r4 + r5 + r6 + r7 + r8) / 8
+		green = (g1 + g2 + g3 + g4 + g5 + g6 + g7 + g8) / 8
+		blue = (b1 + b2 + b3 + b4 + b5 + b6 + b7 + b8) / 8
+		alpha = (a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8) / 8
 	}
 
-	return color.NRGBA{uint8(red >> 8), uint8(green >> 8), uint8(blue >> 8), uint8(alpha >> 8)}
+	return color.RGBA{uint8(red >> 8), uint8(green >> 8), uint8(blue >> 8), uint8(alpha >> 8)}
 }

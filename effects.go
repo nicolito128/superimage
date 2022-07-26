@@ -167,21 +167,16 @@ func blurPointByRadio(img *SuperImage, x, y, radio int) color.RGBA {
 
 	var red, blue, green, alpha uint32
 
-	for i := 1; i <= radio; i++ {
-		r1, g1, b1, a1 := img.At(x, y+i).RGBA()
-		r2, g2, b2, a2 := img.At(x, y-i).RGBA()
-		r3, g3, b3, a3 := img.At(x-i, y).RGBA()
-		r4, g4, b4, a4 := img.At(x+i, y).RGBA()
-		r5, g5, b5, a5 := img.At(x+i, y+i).RGBA()
-		r6, g6, b6, a6 := img.At(x-i, y-i).RGBA()
-		r7, g7, b7, a7 := img.At(x+i, y-i).RGBA()
-		r8, g8, b8, a8 := img.At(x, y).RGBA()
+	r1, g1, b1, a1 := img.At(x, y+radio).RGBA()
+	r2, g2, b2, a2 := img.At(x, y-radio).RGBA()
+	r3, g3, b3, a3 := img.At(x-radio, y).RGBA()
+	r4, g4, b4, a4 := img.At(x+radio, y).RGBA()
+	r5, g5, b5, a5 := img.At(x, y).RGBA()
 
-		red = (r1 + r2 + r3 + r4 + r5 + r6 + r7 + r8) / 8
-		green = (g1 + g2 + g3 + g4 + g5 + g6 + g7 + g8) / 8
-		blue = (b1 + b2 + b3 + b4 + b5 + b6 + b7 + b8) / 8
-		alpha = (a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8) / 8
-	}
+	red = (r1 + r2 + r3 + r4 + r5) / 5
+	green = (g1 + g2 + g3 + g4 + g5) / 5
+	blue = (b1 + b2 + b3 + b4 + b5) / 5
+	alpha = (a1 + a2 + a3 + a4 + a5) / 5
 
 	return color.RGBA{uint8(red >> 8), uint8(green >> 8), uint8(blue >> 8), uint8(alpha >> 8)}
 }

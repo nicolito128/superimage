@@ -2,7 +2,7 @@ package main
 
 import (
 	"bytes"
-	"io/ioutil"
+	"os"
 
 	"github.com/nicolito128/superimage"
 )
@@ -23,5 +23,11 @@ func main() {
 	}
 
 	// Writing the cute gopher
-	ioutil.WriteFile("examples/gopher/gopher.png", buf.Bytes(), 0666)
+	file, err := os.Create("examples/gopher/gopher.png")
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	file.Write(buf.Bytes())
 }

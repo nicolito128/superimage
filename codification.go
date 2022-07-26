@@ -28,7 +28,7 @@ func GetByFile(filename string) (*SuperImage, error) {
 	}
 
 	// Open the file with the right permissions.
-	file, err := os.OpenFile(filename, os.O_CREATE|os.O_RDWR|os.O_APPEND, 0666)
+	file, err := os.Open(filename)
 	if err != nil {
 		return nil, err
 	}

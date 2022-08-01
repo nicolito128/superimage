@@ -6,7 +6,7 @@ import (
 	"image/color"
 )
 
-var ErrNegativeRadio = errors.New("Negative radio must be higher than 0.")
+var ErrNegativeRadio = errors.New("Radio must be higher than 0.")
 var ErrRadioTooBig = errors.New("Radio too big. It must be lower than the image's width or height.")
 
 // Negative inverts the colors of an image returning a new image.Image interface.

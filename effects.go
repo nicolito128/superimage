@@ -9,7 +9,7 @@ import (
 var ErrNegativeRadio = errors.New("Radio must be higher than 0.")
 var ErrRadioTooBig = errors.New("Radio too big. It must be lower than the image's width or height.")
 
-// Negative inverts the colors of an image returning a new image.Image interface.
+// Negative inverts the colors of an image.
 func Negative(img *SuperImage) *SuperImage {
 	bounds := img.Bounds()
 	width := img.Width

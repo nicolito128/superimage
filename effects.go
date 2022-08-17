@@ -8,6 +8,7 @@ import (
 
 var ErrNegativeRadio = errors.New("Radio must be higher than 0.")
 var ErrRadioTooBig = errors.New("Radio too big. It must be lower than the image's width or height.")
+var ErrInvalidOpacity = errors.New("Opacity must be between 0 and 1.")
 
 // Negative inverts the colors of an image.
 func Negative(img *SuperImage) *SuperImage {
@@ -179,4 +180,30 @@ func blurPointByRadio(img *SuperImage, x, y, radio int) color.RGBA {
 	alpha = (a1 + a2 + a3 + a4 + a5) / 5
 
 	return color.RGBA{uint8(red >> 8), uint8(green >> 8), uint8(blue >> 8), uint8(alpha >> 8)}
+}
+
+func Opacity(img *SuperImage, op float64) (*SuperImage, error) {
+	if op > 1 || op < 0 {
+		return nil, ErrInvalidOpacity
+	}
+
+	bounds := img.Bounds()
+	width := img.Width
+	height := img.Height
+
+	edited := img.Factory(&image.NRGBA{}, nil).(*image.NRGBA)
+	for x := bounds.Min.X; x < width; x++ {
+		for y := bounds.Min.Y; y < height; y++ {
+			i := edited.PixOffset(x, y)
+			p := edited.Pix[i : i+4 : i+4]
+
+			r, g, b, a := img.At(x, y).RGBA()
+			p[0] = uint8(r >> 8)
+			p[1] = uint8(g >> 8)
+			p[2] = uint8(b >> 8)
+			p[3] = uint8(uint32(float64(a)*op) >> 8)
+		}
+	}
+
+	return New(edited, img.Format), nil
 }

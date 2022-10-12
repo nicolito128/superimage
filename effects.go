@@ -7,7 +7,6 @@ import (
 )
 
 var ErrNegativeRadio = errors.New("Radio must be higher than 0.")
-var ErrRadioTooBig = errors.New("Radio too big. It must be lower than the image's width or height.")
 var ErrInvalidOpacity = errors.New("Opacity must be between 0 and 1.")
 
 // Negative inverts the colors of an image.
@@ -129,6 +128,8 @@ func Reflect(img *SuperImage) *SuperImage {
 // Blur blurs an image by a given radio.
 // If the radio is negative or bigger than the image's width or height, it returns an error.
 // Radio 0 returns the original image without any change.
+//
+// References: https://relate.cs.illinois.edu/course/cs357-f15/file-version/03473f64afb954c74c02e8988f518de3eddf49a4/media/00-python-numpy/Image%20Blurring.html | http://arantxa.ii.uam.es/~jms/pfcsteleco/lecturas/20081215IreneBlasco.pdf
 func Blur(img *SuperImage, radio int) (*SuperImage, error) {
 	bounds := img.Bounds()
 	width := img.Width
@@ -138,48 +139,41 @@ func Blur(img *SuperImage, radio int) (*SuperImage, error) {
 		return nil, ErrNegativeRadio
 	}
 
-	if radio >= width || radio >= height {
-		return nil, ErrRadioTooBig
-	}
-
-	blurred := img.Factory(&image.RGBA{}, nil).(*image.RGBA)
-	for x := bounds.Min.X + radio; x < width-radio; x++ {
-		for y := bounds.Min.Y + radio; y < height-radio; y++ {
+	blurred := img.Factory(&image.NRGBA{}, nil).(*image.NRGBA)
+	for x := bounds.Min.X; x < width; x++ {
+		for y := bounds.Min.Y; y < height; y++ {
 			i := blurred.PixOffset(x, y)
 			p := blurred.Pix[i : i+4 : i+4]
 
-			color := blurPointByRadio(img, x, y, radio)
-			p[0] = color.R
-			p[1] = color.G
-			p[2] = color.B
-			p[3] = color.A
+			r, g, b, a := img.At(x, y).RGBA()
+			p[0] = uint8(r >> 8)
+			p[1] = uint8(g >> 8)
+			p[2] = uint8(b >> 8)
+			p[3] = uint8(a >> 8)
+		}
+	}
+
+	for i := radio; i > 0; i-- {
+		for x := bounds.Min.X; x < width-1; x++ {
+			for y := bounds.Min.Y; y < height-1; y++ {
+				i := blurred.PixOffset(x, y)
+				p := blurred.Pix[i : i+4 : i+4]
+
+				r1, g1, b1, a1 := blurred.At(x, y).RGBA()
+				r2, g2, b2, a2 := blurred.At(x-1, y).RGBA()
+				r3, g3, b3, a3 := blurred.At(x+1, y).RGBA()
+				r4, g4, b4, a4 := blurred.At(x, y-1).RGBA()
+				r5, g5, b5, a5 := blurred.At(x, y+1).RGBA()
+
+				p[0] = uint8(((r1*4 + r2 + r3 + r4 + r5) / 8) >> 8)
+				p[1] = uint8(((g1*4 + g2 + g3 + g4 + g5) / 8) >> 8)
+				p[2] = uint8(((b1*4 + b2 + b3 + b4 + b5) / 8) >> 8)
+				p[3] = uint8(((a1*4 + a2 + a3 + a4 + a5) / 8) >> 8)
+			}
 		}
 	}
 
 	return New(blurred, img.Format), nil
-}
-
-// blurPointByRadio algorithm to blur a point by a given radio.
-func blurPointByRadio(img *SuperImage, x, y, radio int) color.RGBA {
-	if radio == 0 {
-		r, g, b, a := img.At(x, y).RGBA()
-		return color.RGBA{uint8(r >> 8), uint8(g >> 8), uint8(b >> 8), uint8(a >> 8)}
-	}
-
-	var red, blue, green, alpha uint32
-
-	r1, g1, b1, a1 := img.At(x, y+radio).RGBA()
-	r2, g2, b2, a2 := img.At(x, y-radio).RGBA()
-	r3, g3, b3, a3 := img.At(x-radio, y).RGBA()
-	r4, g4, b4, a4 := img.At(x+radio, y).RGBA()
-	r5, g5, b5, a5 := img.At(x, y).RGBA()
-
-	red = (r1 + r2 + r3 + r4 + r5) / 5
-	green = (g1 + g2 + g3 + g4 + g5) / 5
-	blue = (b1 + b2 + b3 + b4 + b5) / 5
-	alpha = (a1 + a2 + a3 + a4 + a5) / 5
-
-	return color.RGBA{uint8(red >> 8), uint8(green >> 8), uint8(blue >> 8), uint8(alpha >> 8)}
 }
 
 func Opacity(img *SuperImage, op float64) (*SuperImage, error) {

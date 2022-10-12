@@ -247,7 +247,7 @@ func main() {
     }
 
     // Blur
-    blurred, err := superimage.Blur(img)
+    blurred, err := superimage.Blur(img, 2)
     if err != nil {
         panic(err)
     }

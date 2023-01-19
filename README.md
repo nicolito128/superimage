@@ -29,7 +29,7 @@ To install SuperImage package, you need solve the following issues:
 
 2. Import it in your code:
 ```go
-    import "github.com/nicolito128/superimage"
+    import "github.com/nicolito128/superimage/v2"
 ```
 
 1. Get the package using go modules:

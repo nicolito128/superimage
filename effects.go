@@ -4,17 +4,18 @@ import (
 	"errors"
 	"image"
 	"image/color"
+	"reflect"
 )
 
-var ErrNegativeRadio = errors.New("Radio must be higher than 0.")
-var ErrInvalidOpacity = errors.New("Opacity must be between 0 and 1.")
+var ErrNegativeRadio = errors.New("radio must be higher than 0")
+var ErrInvalidOpacity = errors.New("opacity must be between 0 and 1")
 
 // Negative inverts the colors of an image.
-func Negative(img *SuperImage) *SuperImage {
+func Negative(img image.Image) *SuperImage {
 	bounds := img.Bounds()
-	width := img.Width
-	height := img.Height
-	inverted := img.Factory(&image.NRGBA{}, nil).(*image.NRGBA)
+	width := bounds.Dx()
+	height := bounds.Dy()
+	inverted := image.NewNRGBA(bounds)
 
 	for y := bounds.Min.Y; y < height; y++ {
 		for x := bounds.Min.X; x < width; x++ {
@@ -31,16 +32,20 @@ func Negative(img *SuperImage) *SuperImage {
 		}
 	}
 
-	return New(inverted, img.Format)
+	if reflect.DeepEqual(img, img.(*SuperImage)) {
+		return New(inverted, img.(*SuperImage).Format)
+	}
+
+	return New(inverted, "png")
 }
 
 // Flip inverts the image horizontally returning a new *SuperImage.
-func Flip(img *SuperImage) *SuperImage {
+func Flip(img image.Image) *SuperImage {
 	bounds := img.Bounds()
-	width := img.Width
-	height := img.Height
+	width := bounds.Dx()
+	height := bounds.Dy()
 
-	flipped := img.Factory(&image.RGBA{}, nil).(*image.RGBA)
+	flipped := image.NewRGBA(bounds)
 	for x := bounds.Min.X; x < width; x++ {
 		for y := bounds.Min.Y; y <= height/2; y++ {
 			oppositeY := height - y - 1
@@ -76,16 +81,20 @@ func Flip(img *SuperImage) *SuperImage {
 		}
 	}
 
-	return New(flipped, img.Format)
+	if from, to := reflect.ValueOf(img), reflect.ValueOf(img.(*SuperImage)); from.Type().ConvertibleTo(to.Type()) {
+		return New(flipped, img.(*SuperImage).Format)
+	}
+
+	return New(flipped, "png")
 }
 
 // Reflect inverts the image vertically returning a new *SuperImage.
-func Reflect(img *SuperImage) *SuperImage {
+func Reflect(img image.Image) *SuperImage {
 	bounds := img.Bounds()
-	width := img.Width
-	height := img.Height
+	width := bounds.Dx()
+	height := bounds.Dy()
 
-	reflected := img.Factory(&image.RGBA{}, nil).(*image.RGBA)
+	reflected := image.NewRGBA(bounds)
 	for y := bounds.Min.Y; y < height; y++ {
 		for x := bounds.Min.X; x <= width/2; x++ {
 			// X point of the reflected image
@@ -122,7 +131,11 @@ func Reflect(img *SuperImage) *SuperImage {
 		}
 	}
 
-	return New(reflected, img.Format)
+	if from, to := reflect.ValueOf(img), reflect.ValueOf(img.(*SuperImage)); from.Type().ConvertibleTo(to.Type()) {
+		return New(reflected, img.(*SuperImage).Format)
+	}
+
+	return New(reflected, "png")
 }
 
 // Blur blurs an image by a given radio.
@@ -130,16 +143,16 @@ func Reflect(img *SuperImage) *SuperImage {
 // Radio 0 returns the original image without any change.
 //
 // References: https://relate.cs.illinois.edu/course/cs357-f15/file-version/03473f64afb954c74c02e8988f518de3eddf49a4/media/00-python-numpy/Image%20Blurring.html | http://arantxa.ii.uam.es/~jms/pfcsteleco/lecturas/20081215IreneBlasco.pdf
-func Blur(img *SuperImage, radio int) (*SuperImage, error) {
+func Blur(img image.Image, radio int) (*SuperImage, error) {
 	bounds := img.Bounds()
-	width := img.Width
-	height := img.Height
+	width := bounds.Dx()
+	height := bounds.Dy()
 
 	if radio < 0 {
 		return nil, ErrNegativeRadio
 	}
 
-	blurred := img.Factory(&image.NRGBA{}, nil).(*image.NRGBA)
+	blurred := image.NewNRGBA(img.Bounds())
 	for x := bounds.Min.X; x < width; x++ {
 		for y := bounds.Min.Y; y < height; y++ {
 			i := blurred.PixOffset(x, y)
@@ -173,19 +186,23 @@ func Blur(img *SuperImage, radio int) (*SuperImage, error) {
 		}
 	}
 
-	return New(blurred, img.Format), nil
+	if from, to := reflect.ValueOf(img), reflect.ValueOf(img.(*SuperImage)); from.Type().ConvertibleTo(to.Type()) {
+		return New(blurred, img.(*SuperImage).Format), nil
+	}
+
+	return New(blurred, "png"), nil
 }
 
-func Opacity(img *SuperImage, op float64) (*SuperImage, error) {
+func Opacity(img image.Image, op float64) (*SuperImage, error) {
 	if op > 1 || op < 0 {
 		return nil, ErrInvalidOpacity
 	}
 
 	bounds := img.Bounds()
-	width := img.Width
-	height := img.Height
+	width := bounds.Dx()
+	height := bounds.Dy()
 
-	edited := img.Factory(&image.NRGBA{}, nil).(*image.NRGBA)
+	edited := image.NewNRGBA(bounds)
 	for x := bounds.Min.X; x < width; x++ {
 		for y := bounds.Min.Y; y < height; y++ {
 			i := edited.PixOffset(x, y)
@@ -199,5 +216,9 @@ func Opacity(img *SuperImage, op float64) (*SuperImage, error) {
 		}
 	}
 
-	return New(edited, img.Format), nil
+	if from, to := reflect.ValueOf(img), reflect.ValueOf(img.(*SuperImage)); from.Type().ConvertibleTo(to.Type()) {
+		return New(edited, img.(*SuperImage).Format), nil
+	}
+
+	return New(edited, "png"), nil
 }

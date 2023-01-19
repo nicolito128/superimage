@@ -14,7 +14,6 @@ The package provides some useful structures and functions for working with image
     - [Using `GetByFile`](#using-getbyfile)
     - [Using `Decode`](#using-decode)
     - [Using `Encode`](#using-encode)
-    - [Using `ParseURL`](#using-parseurl)
     - [Using `Negative`](#using-negative)
     - [Using `Flip`](#using-flip)
     - [Using `Reflect`](#using-reflect)
@@ -26,14 +25,14 @@ The package provides some useful structures and functions for working with image
 ### Installation
 To install SuperImage package, you need solve the following issues:
 
-1. Install [Go](https://go.dev/) (**version 1.18.+ required**).
+1. Install [Go](https://go.dev/) (**version 1.18.+ recommended**).
 
 2. Import it in your code:
 ```go
     import "github.com/nicolito128/superimage"
 ```
 
-3. Get the package using go modules:
+1. Get the package using go modules:
 ```
     go get github.com/nicolito/superimage
 ```
@@ -45,7 +44,7 @@ package main
 
 import (
     "bytes"
-	"io/ioutil"
+	"os"
 
     "github.com/nicolito128/superimage"
 )
@@ -60,13 +59,13 @@ func main() {
     buf := new(bytes.Buffer)
     // Encode writes the image into the buffer
     // gopher is ".png", so options can be nil
-    err = superimage.Encode(buf, img, nil)
+    err = superimage.Encode(buf, img, nil, nil)
     if err != nil {
         panic(err)
     }
 
     // Writing the cute gopher
-    ioutil.WriteFile("gopher.png", buf.Bytes(), 0666)
+    os.WriteFile("gopher.png", buf.Bytes(), 0666)
 }
 ```
 
@@ -76,7 +75,7 @@ You have some good examples on how to use the package in the `examples/` folder.
 ## References
 
 ### About `SuperImage`
-SuperImage is an Go struct, it can be used as any **Image** from the `std image package` because it's an Image interface implementation with the methods _At()_, _Bounds()_ and _ColorModel()_. You can create a new SuperImage with the _New(...)_ function.
+SuperImage is an Go struct, it can be used as any **Image** from the `std image package` because it's an Image composition. You can create a new SuperImage with the _New(...)_ function.
 
 ```go
 func main() {
@@ -99,7 +98,7 @@ func main() {
         panic(err)
     }
 
-    println(urlImg.Width, urlImg.Height)
+    println(urlImg.Bounds())
 }
 ```
 
@@ -114,7 +113,7 @@ func main() {
         panic(err)
     }
 
-    println(fileImg.Width, fileImg.Height)
+    println(fileImg.Bounds())
 }
 ```
 
@@ -129,7 +128,7 @@ func main() {
         panic(err)
     }
 
-	println(i.Height, i.Width)
+	println(i.Bounds())
 }
 ```
 
@@ -144,24 +143,12 @@ func main() {
     }
 
     buf := new(bytes.Buffer)
-	err = superimage.Encode(buf, img, nil)
+	err = superimage.Encode(buf, img, nil, nil)
 	if err != nil {
 		panic(err)
 	}
 
     println(len(buf.Bytes()))
-}
-```
-
-### Using `ParseURL`
-```go
-func main() {
-    url, format, err := superimage.ParseURL("./project/images/cool.jpg")
-    if err != nil {
-        panic(err)
-    }
-
-    println(url.Path, format)
 }
 ```
 
@@ -180,7 +167,7 @@ func main() {
 
     // Saving
     buf := new(bytes.Buffer)
-    err = superimage.Encode(buf, neg, nil)
+    err = superimage.Encode(buf, neg, nil, nil)
     if err != nil {
         panic(err)
     }
@@ -204,7 +191,7 @@ func main() {
 
     // Saving
     buf := new(bytes.Buffer)
-    err = superimage.Encode(buf, flipped, nil)
+    err = superimage.Encode(buf, flipped, nil, nil)
     if err != nil {
         panic(err)
     }
@@ -228,7 +215,7 @@ func main() {
 
     // Saving
     buf := new(bytes.Buffer)
-    err = superimage.Encode(buf, reflect, nil)
+    err = superimage.Encode(buf, reflect, nil, nil)
     if err != nil {
         panic(err)
     }
@@ -254,7 +241,7 @@ func main() {
 
     // Saving
     buf := new(bytes.Buffer)
-    err = superimage.Encode(buf, blurred, nil)
+    err = superimage.Encode(buf, blurred, nil, nil)
     if err != nil {
         panic(err)
     }

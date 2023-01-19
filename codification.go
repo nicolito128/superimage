@@ -4,25 +4,21 @@ import (
 	"bytes"
 	"fmt"
 	"image"
+	"image/gif"
 	"image/jpeg"
 	"image/png"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
+	"reflect"
 	"strings"
 )
-
-type EncodeOptions struct {
-	// Encode quality for Jpeg format: 1-100
-	Quality int
-}
 
 // GetImageFile gets an image from a current project file.
 func GetByFile(filename string) (*SuperImage, error) {
 	// Getting the file format.
-	_, format, err := ParseURL(filename)
+	_, format, err := parseURL(filename)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +40,7 @@ func GetByFile(filename string) (*SuperImage, error) {
 
 // GetImageFromURL gets an image from an URL with an http GET request.
 func GetByURL(link string) (*SuperImage, error) {
-	_, format, err := ParseURL(link)
+	_, format, err := parseURL(link)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +60,7 @@ func GetByURL(link string) (*SuperImage, error) {
 	}
 	defer res.Body.Close()
 
-	b, err := ioutil.ReadAll(res.Body)
+	b, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +74,7 @@ func GetByURL(link string) (*SuperImage, error) {
 }
 
 // ParseURL parses an URL.
-func ParseURL(link string) (u *url.URL, format string, err error) {
+func parseURL(link string) (u *url.URL, format string, err error) {
 	u, err = url.Parse(link)
 	if err != nil {
 		return u, "", err
@@ -90,7 +86,7 @@ func ParseURL(link string) (u *url.URL, format string, err error) {
 	}
 
 	if format != "png" && format != "jpg" && format != "jpeg" {
-		return u, "", fmt.Errorf("Unsupported format: %s", format)
+		return u, "", fmt.Errorf("unsupported format: %s", format)
 	}
 
 	return u, format, nil
@@ -99,42 +95,54 @@ func ParseURL(link string) (u *url.URL, format string, err error) {
 // Decode decodes an image from r using the specified format (png, jpg, jpeg).
 func Decode(r io.Reader, format string) (*SuperImage, error) {
 	var img image.Image
-	if format == "png" {
+
+	switch format {
+	case "png":
 		im, err := png.Decode(r)
 		img = im
 		if err != nil {
 			return nil, err
 		}
 
-	} else if format == "jpg" || format == "jpeg" {
+	case "jpg", "jpeg":
 		im, err := jpeg.Decode(r)
 		img = im
 		if err != nil {
 			return nil, err
 		}
 
-	} else {
-		return nil, fmt.Errorf("Unsupported format: %s", format)
+	case "gif":
+		im, err := gif.Decode(r)
+		img = im
+		if err != nil {
+			return nil, err
+		}
+
+	default:
+		return nil, fmt.Errorf("unsupported format: %s", format)
 	}
 
 	return New(img, format), nil
 }
 
-// Encode writes the Image m to the given writer in the specified format (png, jpg, jpeg).
-// If op *EncodeOptions is nil, the default options used are: { Quality: 100 }.
-func Encode(w io.Writer, m *SuperImage, op *EncodeOptions) error {
-	if op == nil {
-		op = &EncodeOptions{
-			Quality: 100,
-		}
+// Encode writes the Image m to the given writer in the specified format (png, jpg/jpeg, gif).
+// If your image isn't a jpeg or gif just pass nil.
+func Encode(w io.Writer, m image.Image, jpgOptions *jpeg.Options, gifOptions *gif.Options) error {
+	var format string
+	if from, to := reflect.ValueOf(m), reflect.ValueOf(m.(*SuperImage)); from.Type().ConvertibleTo(to.Type()) {
+		format = m.(*SuperImage).Format
+	} else {
+		format = "png"
 	}
 
-	switch m.Format {
+	switch format {
 	case "png":
 		return png.Encode(w, m)
 	case "jpg", "jpeg":
-		return jpeg.Encode(w, m, &jpeg.Options{Quality: op.Quality})
+		return jpeg.Encode(w, m, jpgOptions)
+	case "gif":
+		return gif.Encode(w, m, gifOptions)
 	default:
-		return fmt.Errorf("Unsupported format: %s", m.Format)
+		return fmt.Errorf("unsupported format: %s", format)
 	}
 }

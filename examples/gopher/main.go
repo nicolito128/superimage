@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"os"
 
-	"github.com/nicolito128/superimage"
+	"github.com/nicolito128/superimage/v2"
 )
 
 func main() {
@@ -17,7 +17,7 @@ func main() {
 	buf := new(bytes.Buffer)
 	// Encode writes the image into the buffer
 	// gopher is ".png", so options can be nil
-	err = superimage.Encode(buf, img, nil)
+	err = superimage.Encode(buf, img, nil, nil)
 	if err != nil {
 		panic(err)
 	}

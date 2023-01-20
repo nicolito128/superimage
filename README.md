@@ -34,7 +34,7 @@ To install SuperImage package, you need solve the following issues:
 
 1. Get the package using go modules:
 ```
-    go get github.com/nicolito/superimage
+    go get github.com/nicolito/superimage/v2
 ```
 
 ### Quick start

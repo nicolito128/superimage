@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"reflect"
 	"strings"
 )
 
@@ -128,11 +127,11 @@ func Decode(r io.Reader, format string) (*SuperImage, error) {
 // Encode writes the Image m to the given writer in the specified format (png, jpg/jpeg, gif).
 // If your image isn't a jpeg or gif just pass nil.
 func Encode(w io.Writer, m image.Image, jpgOptions *jpeg.Options, gifOptions *gif.Options) error {
-	var format string
-	if from, to := reflect.ValueOf(m), reflect.ValueOf(m.(*SuperImage)); from.Type().ConvertibleTo(to.Type()) {
-		format = m.(*SuperImage).Format
-	} else {
-		format = "png"
+	var format = "png"
+
+	sp, ok := m.(SuperImage)
+	if ok {
+		format = sp.Format
 	}
 
 	switch format {

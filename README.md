@@ -27,14 +27,14 @@ To install SuperImage package, you need solve the following issues:
 
 1. Install [Go](https://go.dev/) (**version 1.18.+ recommended**).
 
-2. Import it in your code:
-```go
-    import "github.com/nicolito128/superimage/v2"
-```
-
-1. Get the package using go modules:
+2. Get the package using go modules:
 ```
     go get github.com/nicolito/superimage/v2
+```
+
+3. Import it in your code:
+```go
+    import "github.com/nicolito128/superimage/v2"
 ```
 
 ### Quick start

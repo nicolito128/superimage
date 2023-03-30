@@ -4,7 +4,6 @@ import (
 	"errors"
 	"image"
 	"image/color"
-	"reflect"
 )
 
 var ErrNegativeRadio = errors.New("radio must be higher than 0")
@@ -32,8 +31,9 @@ func Negative(img image.Image) *SuperImage {
 		}
 	}
 
-	if reflect.DeepEqual(img, img.(*SuperImage)) {
-		return New(inverted, img.(*SuperImage).Format)
+	sp, ok := img.(SuperImage)
+	if ok {
+		return New(inverted, sp.Format)
 	}
 
 	return New(inverted, "png")
@@ -81,8 +81,9 @@ func Flip(img image.Image) *SuperImage {
 		}
 	}
 
-	if from, to := reflect.ValueOf(img), reflect.ValueOf(img.(*SuperImage)); from.Type().ConvertibleTo(to.Type()) {
-		return New(flipped, img.(*SuperImage).Format)
+	sp, ok := img.(SuperImage)
+	if ok {
+		return New(flipped, sp.Format)
 	}
 
 	return New(flipped, "png")
@@ -131,8 +132,9 @@ func Reflect(img image.Image) *SuperImage {
 		}
 	}
 
-	if from, to := reflect.ValueOf(img), reflect.ValueOf(img.(*SuperImage)); from.Type().ConvertibleTo(to.Type()) {
-		return New(reflected, img.(*SuperImage).Format)
+	sp, ok := img.(SuperImage)
+	if ok {
+		return New(reflected, sp.Format)
 	}
 
 	return New(reflected, "png")
@@ -186,8 +188,9 @@ func Blur(img image.Image, radio int) (*SuperImage, error) {
 		}
 	}
 
-	if from, to := reflect.ValueOf(img), reflect.ValueOf(img.(*SuperImage)); from.Type().ConvertibleTo(to.Type()) {
-		return New(blurred, img.(*SuperImage).Format), nil
+	sp, ok := img.(SuperImage)
+	if ok {
+		return New(blurred, sp.Format), nil
 	}
 
 	return New(blurred, "png"), nil
@@ -216,8 +219,9 @@ func Opacity(img image.Image, op float64) (*SuperImage, error) {
 		}
 	}
 
-	if from, to := reflect.ValueOf(img), reflect.ValueOf(img.(*SuperImage)); from.Type().ConvertibleTo(to.Type()) {
-		return New(edited, img.(*SuperImage).Format), nil
+	sp, ok := img.(SuperImage)
+	if ok {
+		return New(edited, sp.Format), nil
 	}
 
 	return New(edited, "png"), nil

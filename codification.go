@@ -14,7 +14,7 @@ import (
 	"strings"
 )
 
-// GetImageFile gets an image from a current project file.
+// GetByFile gets an image from a current project file.
 func GetByFile(filename string) (*SuperImage, error) {
 	// Getting the file format.
 	_, format, err := parseURL(filename)
@@ -22,7 +22,6 @@ func GetByFile(filename string) (*SuperImage, error) {
 		return nil, err
 	}
 
-	// Open the file with the right permissions.
 	file, err := os.Open(filename)
 	if err != nil {
 		return nil, err
@@ -37,7 +36,7 @@ func GetByFile(filename string) (*SuperImage, error) {
 	return New(img, format), nil
 }
 
-// GetImageFromURL gets an image from an URL with an http GET request.
+// GetByURL gets an image from an URL with an http GET request.
 func GetByURL(link string) (*SuperImage, error) {
 	_, format, err := parseURL(link)
 	if err != nil {
@@ -49,8 +48,6 @@ func GetByURL(link string) (*SuperImage, error) {
 		return nil, err
 	}
 
-	// Required to make a request.
-	req.Close = true
 	req.Header.Set("Content-Type", "image/"+format)
 
 	res, err := http.DefaultClient.Do(req)
@@ -72,7 +69,7 @@ func GetByURL(link string) (*SuperImage, error) {
 	return New(img, format), nil
 }
 
-// ParseURL parses an URL.
+// parseURL calls to the Parse method of the url package.
 func parseURL(link string) (u *url.URL, format string, err error) {
 	u, err = url.Parse(link)
 	if err != nil {
@@ -91,28 +88,26 @@ func parseURL(link string) (u *url.URL, format string, err error) {
 	return u, format, nil
 }
 
-// Decode decodes an image from r using the specified format (png, jpg, jpeg).
+// Decode decodes an image from r using the specified format (png, jpg, jpeg, gif).
 func Decode(r io.Reader, format string) (*SuperImage, error) {
 	var img image.Image
+	var err error
 
 	switch format {
 	case "png":
-		im, err := png.Decode(r)
-		img = im
+		img, err = png.Decode(r)
 		if err != nil {
 			return nil, err
 		}
 
 	case "jpg", "jpeg":
-		im, err := jpeg.Decode(r)
-		img = im
+		img, err = jpeg.Decode(r)
 		if err != nil {
 			return nil, err
 		}
 
 	case "gif":
-		im, err := gif.Decode(r)
-		img = im
+		img, err = gif.Decode(r)
 		if err != nil {
 			return nil, err
 		}
@@ -125,7 +120,7 @@ func Decode(r io.Reader, format string) (*SuperImage, error) {
 }
 
 // Encode writes the Image m to the given writer in the specified format (png, jpg/jpeg, gif).
-// If your image isn't a jpeg or gif just pass nil.
+// If your image isn't a jpeg or gif just pass nil in the options.
 func Encode(w io.Writer, m image.Image, jpgOptions *jpeg.Options, gifOptions *gif.Options) error {
 	var format = "png"
 

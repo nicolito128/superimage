@@ -33,7 +33,7 @@ func Negative(img image.Image) *SuperImage {
 
 	sp, ok := img.(SuperImage)
 	if ok {
-		return New(inverted, sp.Format)
+		return New(inverted, sp.Format())
 	}
 
 	return New(inverted, "png")
@@ -83,7 +83,7 @@ func Flip(img image.Image) *SuperImage {
 
 	sp, ok := img.(SuperImage)
 	if ok {
-		return New(flipped, sp.Format)
+		return New(flipped, sp.Format())
 	}
 
 	return New(flipped, "png")
@@ -134,7 +134,7 @@ func Reflect(img image.Image) *SuperImage {
 
 	sp, ok := img.(SuperImage)
 	if ok {
-		return New(reflected, sp.Format)
+		return New(reflected, sp.Format())
 	}
 
 	return New(reflected, "png")
@@ -190,7 +190,7 @@ func Blur(img image.Image, radio int) (*SuperImage, error) {
 
 	sp, ok := img.(SuperImage)
 	if ok {
-		return New(blurred, sp.Format), nil
+		return New(blurred, sp.Format()), nil
 	}
 
 	return New(blurred, "png"), nil
@@ -221,7 +221,7 @@ func Opacity(img image.Image, op float64) (*SuperImage, error) {
 
 	sp, ok := img.(SuperImage)
 	if ok {
-		return New(edited, sp.Format), nil
+		return New(edited, sp.Format()), nil
 	}
 
 	return New(edited, "png"), nil

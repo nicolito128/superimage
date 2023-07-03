@@ -9,9 +9,16 @@ type SuperImage struct {
 	image.Image
 
 	// Image format: png, jpg, jpeg.
-	Format string
+	format string
 }
 
 func New(im image.Image, format string) *SuperImage {
-	return &SuperImage{im, format}
+	return &SuperImage{
+		Image:  im,
+		format: format,
+	}
+}
+
+func (si SuperImage) Format() string {
+	return si.format
 }

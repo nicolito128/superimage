@@ -124,9 +124,9 @@ func Decode(r io.Reader, format string) (*SuperImage, error) {
 func Encode(w io.Writer, m image.Image, jpgOptions *jpeg.Options, gifOptions *gif.Options) error {
 	var format = "png"
 
-	sp, ok := m.(SuperImage)
+	sp, ok := (m).(SuperImage)
 	if ok {
-		format = sp.Format
+		format = sp.Format()
 	}
 
 	switch format {

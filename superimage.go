@@ -4,7 +4,7 @@ import (
 	"image"
 )
 
-// SuperImage is an image.Image implementation that wraps another image.Image.
+// SuperImage is an image.Image implementation
 type SuperImage struct {
 	image.Image
 

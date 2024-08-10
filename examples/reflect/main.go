@@ -40,7 +40,7 @@ func main() {
 	}
 
 	// Writing the cute reflected gopher
-	file, err := os.Create("examples/reflect-gopher/gopher.png")
+	file, err := os.Create("examples/reflect/gopher.png")
 	if err != nil {
 		panic(err)
 	}

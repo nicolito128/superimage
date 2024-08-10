@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	log.Println("Starting blur-gopher example...")
+	log.Println("Starting negative-gopher example...")
 	start := time.Now()
 	defer func() {
 		log.Printf("Time since example started: %dms\n", time.Since(start).Milliseconds())
@@ -30,23 +30,17 @@ func main() {
 		panic(err)
 	}
 
-	// Blur returns a new *SuperImage with the image blurred by radio.
-	// Higher radio means more blur.
-	// If radio is 0, the image is not blurred.
-	blurred, err := superimage.Blur(img, 2)
-	if err != nil {
-		panic(err)
-	}
-
+	// Negative inverts the colors of an image returning a new *SuperImage.
+	neg := superimage.Negative(img)
 	// Encoding on the buffer
 	buf = new(bytes.Buffer)
-	err = superimage.Encode(buf, blurred, nil, nil)
+	err = superimage.Encode(buf, neg, nil, nil)
 	if err != nil {
 		panic(err)
 	}
 
-	// Writing the cute blurred gopher
-	file, err := os.Create("examples/blur-gopher/gopher.png")
+	// Writing the cute negative gopher
+	file, err := os.Create("examples/negative/gopher.png")
 	if err != nil {
 		panic(err)
 	}

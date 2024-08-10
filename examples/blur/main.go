@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	log.Println("Starting flip-gopher example...")
+	log.Println("Starting blur-gopher example...")
 	start := time.Now()
 	defer func() {
 		log.Printf("Time since example started: %dms\n", time.Since(start).Milliseconds())
@@ -21,7 +21,7 @@ func main() {
 		panic(err)
 	}
 
-	// Buffer store the image data
+	// Buffer for store the image data
 	buf := new(bytes.Buffer)
 	// Encode writes the image into the buffer
 	// gopher is ".png", so options can be nil
@@ -30,17 +30,23 @@ func main() {
 		panic(err)
 	}
 
-	// Flip the image horizontally
-	flip := superimage.Flip(img)
-	// Encoding on the buffer
-	buf = new(bytes.Buffer)
-	err = superimage.Encode(buf, flip, nil, nil)
+	// Blur returns a new *SuperImage with the image blurred by radio.
+	// Higher radio means more blur.
+	// If radio is 0, the image is not blurred.
+	blurred, err := superimage.Blur(img, 2)
 	if err != nil {
 		panic(err)
 	}
 
-	// Writing the cute flipped gopher
-	file, err := os.Create("examples/flip-gopher/gopher.png")
+	// Encoding on the buffer
+	buf = new(bytes.Buffer)
+	err = superimage.Encode(buf, blurred, nil, nil)
+	if err != nil {
+		panic(err)
+	}
+
+	// Writing the cute blurred gopher
+	file, err := os.Create("examples/blur/gopher.png")
 	if err != nil {
 		panic(err)
 	}

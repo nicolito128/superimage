@@ -3,8 +3,8 @@ example:
 
 run-examples:
 	go run examples/gopher/main.go
-	go run examples/negative-gopher/main.go
-	go run examples/blur-gopher/main.go
-	go run examples/flip-gopher/main.go
-	go run examples/opacity-gopher/main.go
-	go run examples/reflect-gopher/main.go
+	go run examples/negative/main.go
+	go run examples/blur/main.go
+	go run examples/flip/main.go
+	go run examples/opacity/main.go
+	go run examples/reflect/main.go

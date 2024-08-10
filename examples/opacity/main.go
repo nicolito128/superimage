@@ -45,7 +45,7 @@ func main() {
 	}
 
 	// Writing the cute transparent gopher
-	file, err := os.Create("examples/opacity-gopher/gopher.png")
+	file, err := os.Create("examples/opacity/gopher.png")
 	if err != nil {
 		panic(err)
 	}

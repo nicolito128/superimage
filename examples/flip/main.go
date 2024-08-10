@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	log.Println("Starting negative-gopher example...")
+	log.Println("Starting flip-gopher example...")
 	start := time.Now()
 	defer func() {
 		log.Printf("Time since example started: %dms\n", time.Since(start).Milliseconds())
@@ -21,7 +21,7 @@ func main() {
 		panic(err)
 	}
 
-	// Buffer for store the image data
+	// Buffer store the image data
 	buf := new(bytes.Buffer)
 	// Encode writes the image into the buffer
 	// gopher is ".png", so options can be nil
@@ -30,17 +30,17 @@ func main() {
 		panic(err)
 	}
 
-	// Negative inverts the colors of an image returning a new *SuperImage.
-	neg := superimage.Negative(img)
+	// Flip the image horizontally
+	flip := superimage.Flip(img)
 	// Encoding on the buffer
 	buf = new(bytes.Buffer)
-	err = superimage.Encode(buf, neg, nil, nil)
+	err = superimage.Encode(buf, flip, nil, nil)
 	if err != nil {
 		panic(err)
 	}
 
-	// Writing the cute negative gopher
-	file, err := os.Create("examples/negative-gopher/gopher.png")
+	// Writing the cute flipped gopher
+	file, err := os.Create("examples/flip/gopher.png")
 	if err != nil {
 		panic(err)
 	}

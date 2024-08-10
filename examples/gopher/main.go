@@ -2,12 +2,20 @@ package main
 
 import (
 	"bytes"
+	"log"
 	"os"
+	"time"
 
 	"github.com/nicolito128/superimage/v2"
 )
 
 func main() {
+	log.Println("Starting gopher example...")
+	start := time.Now()
+	defer func() {
+		log.Printf("Time since example started: %dms\n", time.Since(start).Milliseconds())
+	}()
+
 	img, err := superimage.GetByURL("https://go.dev/blog/gopher/gopher.png")
 	if err != nil {
 		panic(err)

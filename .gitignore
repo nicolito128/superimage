@@ -1,9 +1,16 @@
+# IDE conf and debugger
 .vscode
+
+# Environment
 .env
-/build
-/examples/*.png
-/examples/*.jpg
-/examples/*.jpeg
-/examples/*/*.png
-/examples/*/*.jpg
-/examples/*/*.jpeg
+.env.*
+!.env.example
+
+# Binaries
+/bin/**/*
+!/bin/**/*.md
+
+# Example images
+/examples/**/*.png
+/examples/**/*.jpg
+/examples/**/*.jpeg

@@ -25,7 +25,7 @@ The package provides some useful structures and functions for working with image
 ### Installation
 To install SuperImage package, you need solve the following issues:
 
-1. Install [Go](https://go.dev/) (**version 1.22.+ recommended**).
+1. Install [Go](https://go.dev/) (**version 1.24.+ recommended**).
 
 2. Get the package using go modules:
 ```

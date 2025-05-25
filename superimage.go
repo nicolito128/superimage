@@ -1,6 +1,7 @@
 package superimage
 
 import (
+	_ "embed"
 	"image"
 )
 

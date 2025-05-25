@@ -69,25 +69,6 @@ func GetByURL(link string) (*SuperImage, error) {
 	return New(img, format), nil
 }
 
-// parseURL calls to the Parse method of the url package.
-func parseURL(link string) (u *url.URL, format string, err error) {
-	u, err = url.Parse(link)
-	if err != nil {
-		return u, "", err
-	}
-
-	format = u.Path[len(u.Path)-4:]
-	if strings.Contains(format, ".") {
-		format = strings.Split(format, ".")[1]
-	}
-
-	if format != "png" && format != "jpg" && format != "jpeg" {
-		return u, "", fmt.Errorf("unsupported format: %s", format)
-	}
-
-	return u, format, nil
-}
-
 // Decode decodes an image from r using the specified format (png, jpg, jpeg, gif).
 func Decode(r io.Reader, format string) (*SuperImage, error) {
 	var img image.Image
@@ -139,4 +120,23 @@ func Encode(w io.Writer, m image.Image, jpgOptions *jpeg.Options, gifOptions *gi
 	default:
 		return fmt.Errorf("unsupported format: %s", format)
 	}
+}
+
+// parseURL calls to the Parse method of the url package.
+func parseURL(link string) (u *url.URL, format string, err error) {
+	u, err = url.Parse(link)
+	if err != nil {
+		return u, "", err
+	}
+
+	format = u.Path[len(u.Path)-4:]
+	if strings.Contains(format, ".") {
+		format = strings.Split(format, ".")[1]
+	}
+
+	if format != "png" && format != "jpg" && format != "jpeg" {
+		return u, "", fmt.Errorf("unsupported format: %s", format)
+	}
+
+	return u, format, nil
 }

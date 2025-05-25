@@ -18,6 +18,7 @@ The package provides some useful structures and functions for working with image
     - [Using `Flip`](#using-flip)
     - [Using `Reflect`](#using-reflect)
     - [Using `Blur`](#using-blur)
+    - [Using `Pixelate`](#using-pixelate)
   - [Interest links](#interest-links)
 
 ## Getting Started
@@ -247,6 +248,32 @@ func main() {
     }
 
     ioutil.WriteFile("./blurred.png", buf.Bytes(), 0666)
+}
+```
+
+### Using `Pixelate`
+Pixelate an image by a given radio.
+```go
+func main() {
+    img, err := superimage.GetByURL("https://awesomeurl.com/image.png")
+    if err != nil {
+        panic(err)
+    }
+
+    // Pixelate
+    pixelated, err := superimage.Pixelate(img, 2)
+    if err != nil {
+        panic(err)
+    }
+
+    // Saving
+    buf := new(bytes.Buffer)
+    err = superimage.Encode(buf, pixelated, nil, nil)
+    if err != nil {
+        panic(err)
+    }
+
+    ioutil.WriteFile("./pixelated.png", buf.Bytes(), 0666)
 }
 ```
 

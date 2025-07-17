@@ -8,3 +8,4 @@ run-examples:
 	go run examples/flip/main.go
 	go run examples/opacity/main.go
 	go run examples/reflect/main.go
+	go run examples/pixelate/main.go

@@ -47,7 +47,7 @@ import (
     "bytes"
 	"os"
 
-    "github.com/nicolito128/superimage"
+    "github.com/nicolito128/superimage/v2"
 )
 
 func main() {

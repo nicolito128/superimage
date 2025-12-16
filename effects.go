@@ -36,8 +36,8 @@ func Negative(img image.Image) *SuperImage {
 
 			for y := startY; y < endY; y++ {
 				for x := range width {
-					i := inverted.PixOffset(x, y)
-					p := inverted.Pix[i : i+4 : i+4]
+					j := inverted.PixOffset(x, y)
+					p := inverted.Pix[j : j+4 : j+4]
 
 					c := img.At(x, y)
 					r, g, b, a := c.RGBA()
@@ -86,7 +86,7 @@ func Flip(img image.Image) *SuperImage {
 			}
 
 			for y := startY; y < endY; y++ {
-				for x := 0; x < width; x++ {
+				for x := range width {
 					originalColor := img.At(x, y)
 					flipped.Set(x, height-y-1, originalColor)
 				}
@@ -160,7 +160,7 @@ func Blur(img image.Image, radius int) (*SuperImage, error) {
 	var wg sync.WaitGroup
 	numWorkers, linesPerWorker := getWorkers(height)
 
-	for i := 0; i < numWorkers; i++ {
+	for i := range numWorkers {
 		wg.Add(1)
 		go func(workerID int) {
 			defer wg.Done()
@@ -317,7 +317,7 @@ func Pixelate(img image.Image, radius int) (*SuperImage, error) {
 	numWorkers := runtime.NumCPU()
 	numBlocksY := (height + radius - 1) / radius
 
-	for i := 0; i < numWorkers; i++ {
+	for i := range numWorkers {
 		wg.Add(1)
 		go func(workerID int) {
 			defer wg.Done()
@@ -330,9 +330,7 @@ func Pixelate(img image.Image, radius int) (*SuperImage, error) {
 
 			startY := startBlockY * radius
 			endY := endBlockY * radius
-			if endY > height {
-				endY = height
-			}
+			endY = min(endY, height)
 
 			for y := startY; y < endY; y += radius {
 				for x := 0; x < width; x += radius {
@@ -341,8 +339,8 @@ func Pixelate(img image.Image, radius int) (*SuperImage, error) {
 
 					avgColor := calculateAverageColourWithRect(img, blockRect)
 
-					for dy := 0; dy < radius; dy++ {
-						for dx := 0; dx < radius; dx++ {
+					for dy := range radius {
+						for dx := range radius {
 							if x+dx < width && y+dy < height {
 								pixelated.Set(x+dx, y+dy, avgColor)
 							}

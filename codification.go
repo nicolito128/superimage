@@ -100,28 +100,6 @@ func Decode(r io.Reader, format string) (*SuperImage, error) {
 	return New(img, format), nil
 }
 
-// Encode writes the Image m to the given writer in the specified format (png, jpg/jpeg, gif).
-// If your image isn't a jpeg or gif just pass nil in the options.
-func Encode(w io.Writer, m image.Image, jpgOptions *jpeg.Options, gifOptions *gif.Options) error {
-	var format = "png"
-
-	sp, ok := (m).(SuperImage)
-	if ok {
-		format = sp.Format()
-	}
-
-	switch format {
-	case "png":
-		return png.Encode(w, m)
-	case "jpg", "jpeg":
-		return jpeg.Encode(w, m, jpgOptions)
-	case "gif":
-		return gif.Encode(w, m, gifOptions)
-	default:
-		return fmt.Errorf("unsupported format: %s", format)
-	}
-}
-
 // parseURL calls to the Parse method of the url package.
 func parseURL(link string) (u *url.URL, format string, err error) {
 	u, err = url.Parse(link)

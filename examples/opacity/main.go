@@ -25,7 +25,7 @@ func main() {
 	buf := new(bytes.Buffer)
 	// Encode writes the image into the buffer
 	// gopher is ".png", so options can be nil
-	err = superimage.Encode(buf, img, nil, nil)
+	err = superimage.Encode(buf, img, nil)
 	if err != nil {
 		panic(err)
 	}
@@ -39,7 +39,7 @@ func main() {
 
 	// Encoding on the buffer
 	buf = new(bytes.Buffer)
-	err = superimage.Encode(buf, opimg, nil, nil)
+	err = superimage.Encode(buf, opimg, nil)
 	if err != nil {
 		panic(err)
 	}

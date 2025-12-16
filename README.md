@@ -30,12 +30,12 @@ To install SuperImage package, you need solve the following issues:
 
 2. Get the package using go modules:
 ```
-    go get -u github.com/nicolito/superimage/v2
+    go get -u github.com/nicolito/superimage/v3
 ```
 
 3. Import it in your code:
 ```go
-    import "github.com/nicolito128/superimage/v2"
+    import "github.com/nicolito128/superimage/v3"
 ```
 
 ### Quick start

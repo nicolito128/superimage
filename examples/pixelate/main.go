@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/nicolito128/superimage/v2"
+	"github.com/nicolito128/superimage/v3"
 )
 
 func main() {

@@ -60,7 +60,7 @@ func main() {
     buf := new(bytes.Buffer)
     // Encode writes the image into the buffer
     // gopher is ".png", so options can be nil
-    err = superimage.Encode(buf, img, nil, nil)
+    err = superimage.Encode(buf, img, nil)
     if err != nil {
         panic(err)
     }
@@ -144,7 +144,7 @@ func main() {
     }
 
     buf := new(bytes.Buffer)
-	err = superimage.Encode(buf, img, nil, nil)
+	err = superimage.Encode(buf, img, nil)
 	if err != nil {
 		panic(err)
 	}
@@ -168,7 +168,7 @@ func main() {
 
     // Saving
     buf := new(bytes.Buffer)
-    err = superimage.Encode(buf, neg, nil, nil)
+    err = superimage.Encode(buf, neg, nil)
     if err != nil {
         panic(err)
     }
@@ -192,7 +192,7 @@ func main() {
 
     // Saving
     buf := new(bytes.Buffer)
-    err = superimage.Encode(buf, flipped, nil, nil)
+    err = superimage.Encode(buf, flipped, nil)
     if err != nil {
         panic(err)
     }
@@ -216,7 +216,7 @@ func main() {
 
     // Saving
     buf := new(bytes.Buffer)
-    err = superimage.Encode(buf, reflect, nil, nil)
+    err = superimage.Encode(buf, reflect, nil)
     if err != nil {
         panic(err)
     }
@@ -242,7 +242,7 @@ func main() {
 
     // Saving
     buf := new(bytes.Buffer)
-    err = superimage.Encode(buf, blurred, nil, nil)
+    err = superimage.Encode(buf, blurred, nil)
     if err != nil {
         panic(err)
     }
@@ -268,7 +268,7 @@ func main() {
 
     // Saving
     buf := new(bytes.Buffer)
-    err = superimage.Encode(buf, pixelated, nil, nil)
+    err = superimage.Encode(buf, pixelated, nil)
     if err != nil {
         panic(err)
     }

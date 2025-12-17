@@ -43,7 +43,7 @@ func Encode(w io.Writer, m image.Image, opts *EncodeOptions) error {
 
 	switch format {
 	case "png":
-		return DefaultPNGEncoder.Encode(w, m)
+		return opts.PngEnc.Encode(w, m)
 	case "jpg", "jpeg":
 		return jpeg.Encode(w, m, opts.JpegOpts)
 	case "gif":
